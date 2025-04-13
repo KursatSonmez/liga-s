@@ -1,0 +1,20 @@
+app-header {
+
+  >p-card {
+    .p-card-content {
+      display: none;
+    }
+
+    .app-title-template {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      >span,
+      >p-button {
+        margin-left: auto;
+      }
+    }
+  }
+}

@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ButtonModule } from "primeng/button";
-import { CardModule } from "primeng/card";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ButtonModule, CardModule],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'liga-s';
 }

@@ -1,0 +1,44 @@
+<div>
+    <p-table piTableOptions [value]="scoresArr()" dataKey="teamName">
+        <ng-template #header>
+            <tr>
+                <th style="width: 40%;">Takımlar</th>
+                <th style="width: 10%;">P</th>
+                <th style="width: 10%;">O</th>
+
+                <th style="width: 10%;">G</th>
+                <th style="width: 10%;">B</th>
+                <th style="width: 10%;">M</th>
+
+                <th style="width: 10%;">Av.</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-item>
+            <tr>
+                @if(loading()) {
+
+                <td><p-skeleton></p-skeleton></td>
+                <td><p-skeleton></p-skeleton></td>
+                <td><p-skeleton></p-skeleton></td>
+
+                <td><p-skeleton></p-skeleton></td>
+                <td><p-skeleton></p-skeleton></td>
+                <td><p-skeleton></p-skeleton></td>
+
+                <td><p-skeleton></p-skeleton></td>
+                }
+                @else {
+                <td>{{ item.teamName }}</td>
+                <td>{{ item.point }}</td>
+                <td>{{ item.matchCount }}</td>
+
+                <td>{{ item.wins }}</td>
+                <td>{{ item.draws }}</td>
+                <td>{{ item.loses }}</td>
+
+                <td>{{ item.average }}</td>
+                }
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
