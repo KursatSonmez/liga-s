@@ -73,7 +73,8 @@ export class FixtureService {
           i--;
         }
       }
-      weeklyMatches.forEach(x => this._fixture.push(new FixtureModel(week, weeklyMatches)));
+      const fixtureModel = new FixtureModel(week, weeklyMatches);
+      this._fixture.push(fixtureModel);
       week++;
     }
 
