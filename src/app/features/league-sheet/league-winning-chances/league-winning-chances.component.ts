@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, numberAttribute, OnInit, signal } from '@angular/core';
-import { LeagueSheetService } from '../league-sheet.service';
 import { getTakeUntilDestroyed } from '../../../utils/destroy';
 import { LeagueWinningChange } from '../../../models/abstract';
 import { LeagueService } from '../../shared/league.service';
