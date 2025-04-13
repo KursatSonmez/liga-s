@@ -1,4 +1,4 @@
-import { LeagueWinningChange, MatchResult, Season, TeamScore } from '../../models/abstract';
+import { LeagueWinningChange, Match, Season, TeamScore } from '../../models/abstract';
 
 export const Seasons: Season[] = [
   {
@@ -48,34 +48,38 @@ export const TeamScores: TeamScore[] = [
   },
 ];
 
-export const MatchResults: MatchResult[] = [
+export const MatchResults: Match[] = [
   {
-    week: 1,
     homeTeamName: 'Fenerbahçe',
-    homeScore: 3,
     awayTeamName: 'Sivasspor',
-    awayScore: 2,
+    result: {
+      homeScore: 3,
+      awayScore: 2,
+    },
   },
   {
-    week: 1,
     homeTeamName: 'Galatasaray',
-    homeScore: 3,
     awayTeamName: 'Beşiktaş',
-    awayScore: 3,
+    result: {
+      homeScore: 3,
+      awayScore: 3,
+    },
   },
   {
-    week: 2,
     homeTeamName: 'Beşiktaş',
-    homeScore: 2,
     awayTeamName: 'Fenerbahçe',
-    awayScore: 3,
+    result: {
+      homeScore: 2,
+      awayScore: 3,
+    },
   },
   {
-    week: 2,
     homeTeamName: 'Galatasaray',
-    homeScore: 2,
     awayTeamName: 'Sivasspor',
-    awayScore: 2,
+    result: {
+      homeScore: 2,
+      awayScore: 2,
+    },
   },
 ];
 

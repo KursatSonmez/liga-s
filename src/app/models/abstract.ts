@@ -37,22 +37,32 @@ export interface TeamScore {
   average: number;
 }
 
-export interface MatchResult {
-  homeTeamName: string;
-
-  homeScore: number;
-
-  awayTeamName: string;
-
-  awayScore: number;
-
-  /**Hangi hafta oynandığı bilgisi */
-  week: number;
-}
-
 export interface LeagueWinningChange {
   teamName: string;
 
   /**Şampiyon olma olasılığı */
   chance: number;
+}
+
+export interface Match {
+  homeTeamName: string;
+
+  awayTeamName: string;
+
+  result: MatchResult | undefined;
+}
+
+export interface MatchResult {
+  homeScore: number;
+
+  awayScore: number;
+}
+
+export interface Fixture {
+  week: number;
+  fixture: Match[];
+}
+
+export interface Team {
+  name: string;
 }

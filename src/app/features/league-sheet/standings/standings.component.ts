@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, ViewChild } from '@angular/core';
-import { LeagueSheetService } from '../league-sheet.service';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { getTakeUntilDestroyed } from '../../../utils/destroy';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Table } from 'primeng/table';
-import { delay, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { TeamScore } from '../../../models/abstract';
+import { LeagueService } from '../../shared/league.service';
 
 
 @Component({
@@ -14,26 +13,48 @@ import { TeamScore } from '../../../models/abstract';
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StandingsComponent {
+export class StandingsComponent implements OnInit {
 
   @ViewChild(Table)
   table!: Table;
 
-  scoresArr = computed(() => this.scores() ?? []);
+  scoresArr: WritableSignal<TeamScore[]> = signal([]);
   loading = signal(true);
 
-  private readonly leagueSheetService = inject(LeagueSheetService);
+  private readonly leagueService = inject(LeagueService);
   private readonly takeUntilDestroyed = getTakeUntilDestroyed();
+  private readonly cd = inject(ChangeDetectorRef);
 
-  private readonly scores = toSignal(
-    this.leagueSheetService.getStandings()
+  ngOnInit(): void {
+    this.getList(true);
+    this.leagueService
+      .onWeekPlaying()
+      .pipe(this.takeUntilDestroyed())
+      .subscribe(() => {
+        this.loading.set(true);
+      });
+
+    this.leagueService
+      .onWeekPlayed()
+      .pipe(this.takeUntilDestroyed())
+      .subscribe(() => {
+        this.getList(true);
+      });
+  }
+
+  private getList(useLoading: boolean) {
+
+    this.leagueService.getStandings()
       .pipe(
-        delay(5000),
         tap({
-          subscribe: () => this.loading.set(true),
-          finalize: () => this.loading.set(false),
+          subscribe: () => useLoading && !this.loading() && this.loading.set(true),
+          finalize: () => useLoading && this.loading() && this.loading.set(false),
         }),
         this.takeUntilDestroyed()
       )
-    , { initialValue: Array.from({ length: 5 }).map(x => ({} as TeamScore)) });
+      .subscribe(val => {
+        this.scoresArr.set(val.orderBy('-point', '-average', 'teamName'));
+        this.cd.markForCheck();
+      });
+  }
 }

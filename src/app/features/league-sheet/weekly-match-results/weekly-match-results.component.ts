@@ -1,7 +1,7 @@
-import { Component, computed, inject, input, numberAttribute } from '@angular/core';
-import { LeagueSheetService } from '../league-sheet.service';
+import { Component, effect, inject, Input, input, numberAttribute, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { LeagueService } from '../../shared/league.service';
+import { Match } from '../../../models/abstract';
 import { getTakeUntilDestroyed } from '../../../utils/destroy';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'weekly-match-results',
@@ -9,14 +9,21 @@ import { toSignal } from '@angular/core/rxjs-interop';
   <p-table piTableOptions dataKey="homeTeamName" [value]="weekResultsArr()">
     <ng-template #header>
         <tr>
-            <th colspan="3" class="text-center">STS {{ week() }}. Hafta Maç Sonuçları</th>
+            <th colspan="3" class="text-center">STS {{ week }}. Hafta Maç Sonuçları</th>
         </tr>
     </ng-template>
     <ng-template #body let-item>
         <tr>
+          @if(loading()) {
+            <td><p-skeleton></p-skeleton></td>
+            <td><p-skeleton></p-skeleton></td>
+            <td><p-skeleton></p-skeleton></td>
+          }
+          @else {
             <td>{{ item.homeTeamName }}</td>
-            <td>{{ item.homeScore }} - {{ item.awayScore }}</td>
+            <td>{{ item.result?.homeScore }} - {{ item.result?.awayScore }}</td>
             <td>{{ item.awayTeamName }}</td>
+          }
         </tr>
     </ng-template>
 </p-table>
@@ -24,14 +31,42 @@ import { toSignal } from '@angular/core/rxjs-interop';
   `,
   standalone: false,
 })
-export class WeeklyMatchResultsComponent {
+export class WeeklyMatchResultsComponent implements OnInit, OnChanges {
 
-  week = input(null, { transform: numberAttribute });
+  @Input({ transform: numberAttribute })
+  week: number | null = null;
 
-  private readonly leagueSheetService = inject(LeagueSheetService);
+  private readonly leagueService = inject(LeagueService);
   private readonly takeUntilDestroyed = getTakeUntilDestroyed();
 
-  private readonly weekResults = toSignal(this.leagueSheetService.getWeekResults(this.week()).pipe(this.takeUntilDestroyed()));
+  weekResultsArr: WritableSignal<Match[]> = signal([]);
+  loading = signal(true);
 
-  weekResultsArr = computed(() => this.weekResults() ?? []);
+  ngOnInit(): void {
+
+    this.leagueService
+      .onWeekPlaying()
+      .pipe(this.takeUntilDestroyed())
+      .subscribe(() => {
+        this.loading.set(true);
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['week']) {
+      this.refresh();
+    }
+  }
+
+  private refresh() {
+    if (!this.week)
+      return;
+
+    const matches = this.leagueService.getWeekMatches(this.week);
+
+    this.weekResultsArr.set(matches);
+
+    if (this.loading())
+      this.loading.set(false);
+  }
 }

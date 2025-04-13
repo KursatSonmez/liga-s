@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 import { FeatureLayoutComponent } from './feature.layout.component';
+import { LeagueService } from './shared/league.service';
+import { FixtureService } from './shared/fixture.service';
 
 export const FEATURE_ROUTES: Routes = [
   {
     path: '',
     component: FeatureLayoutComponent,
+    providers: [LeagueService, FixtureService],
     children: [
       {
         path: '',
