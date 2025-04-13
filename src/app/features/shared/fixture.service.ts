@@ -53,6 +53,8 @@ export class FixtureService {
     // eşleştirilen takım sıralamaları karıştırılır
     this.shuffle(matches);
 
+    this.totalMatches = matches.length;
+
     // haftalık maçlar ayarlanır
     const matchesPerWeek = Math.floor(teams.length / 2);
     let week = 1;
@@ -75,7 +77,6 @@ export class FixtureService {
       week++;
     }
 
-    this.totalMatches = matches.length;
     this.totalWeeks = week - 1;
     this.matchesPerWeek = matchesPerWeek;
   }

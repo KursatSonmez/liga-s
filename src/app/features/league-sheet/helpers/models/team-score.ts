@@ -12,4 +12,5 @@ export class TeamScoreModel implements TeamScore {
   draws: number = 0;
   loses: number = 0;
   average: number = 0;
+  chance?: number;
 }

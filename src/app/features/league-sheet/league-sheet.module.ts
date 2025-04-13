@@ -7,7 +7,7 @@ import { WeeklyMatchResultsComponent } from './weekly-match-results/weekly-match
 import { LeagueSheetComponent } from './league-sheet.component';
 import { PiTableOptionsDirective } from '../../utils/primeng/pi-table-options.directive';
 import { ButtonModule } from 'primeng/button';
-import { LeagueWinningChangesComponent } from './league-winning-changes/league-winning-changes.component';
+import { LeagueWinningChancesComponent } from './league-winning-chances/league-winning-chances.component';
 import { SkeletonModule } from 'primeng/skeleton';
 
 
@@ -15,7 +15,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     declarations: [
         StandingsComponent,
         WeeklyMatchResultsComponent,
-        LeagueWinningChangesComponent,
+        LeagueWinningChancesComponent,
         LeagueSheetComponent,
     ],
     imports: [

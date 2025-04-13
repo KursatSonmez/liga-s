@@ -14,7 +14,7 @@
             </tr>
         </ng-template>
         <ng-template #body let-item>
-            <tr>
+            <tr [class.nochance]="item.chance === 0">
                 @if(loading()) {
 
                 <td><p-skeleton></p-skeleton></td>

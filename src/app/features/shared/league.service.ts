@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { LeagueManagement } from '../league-sheet/helpers/league-management';
 import { TeamModel } from '../league-sheet/helpers/models/team';
-import { Observable, of } from 'rxjs';
-import { TeamScore } from '../../models/abstract';
+import { Observable, of, tap } from 'rxjs';
+import { LeagueWinningChange, TeamScore } from '../../models/abstract';
 import { FixtureService } from './fixture.service';
 import { MatchModel } from '../league-sheet/helpers/models/match';
 
@@ -30,6 +30,10 @@ export class LeagueService {
     return this._league.onWeekPlayed._observer.asObservable();
   }
 
+  onWinningChances() {
+    return this._league.onWinningChances.observer$();
+  }
+
   getStandings(): Observable<TeamScore[]> {
     return of(this._league.getTeamScores());
   }
@@ -48,6 +52,10 @@ export class LeagueService {
 
   getWeekMatches(week: number): MatchModel[] {
     return this.fixtureService.getWeekMatches(week);
+  }
+
+  getWinningChances(): Observable<LeagueWinningChange[]> {
+    return of(this._league.getWinningChances());
   }
 
   playNextWeek(): void {
