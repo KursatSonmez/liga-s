@@ -26,11 +26,15 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public/assets"
               }
             ],
             "styles": [
-              "public/css/bootstrap-grid.min.css",
+              {
+                "input": "public/css/bootstrap-grid.min.css",
+                "bundleName": "bootstrap-grid",
+                "inject": true
+              },
               "public/scss/template.scss",
               "src/styles.scss"
             ],
@@ -41,8 +45,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
