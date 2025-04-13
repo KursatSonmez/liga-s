@@ -65,4 +65,6 @@ export interface Fixture {
 
 export interface Team {
   name: string;
+  /** 100 üzerinden güç değeri */
+  power: number;
 }

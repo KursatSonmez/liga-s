@@ -28,7 +28,7 @@ export class FixtureService {
   }
 
   play(match: MatchModel): void {
-    const homePower = 100, awayPower = 100;
+    const homePower = match.homeTeam.power, awayPower = match.awayTeam.power;
     const [homeScore, awayScore] = generateScore(homePower, awayPower);
 
     match.result = new MatchResultModel(homeScore, awayScore);
