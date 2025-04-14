@@ -32,4 +32,9 @@ export class MatchResultModel implements MatchResult {
   get isDraw(): boolean {
     return this.homeScore === this.awayScore;
   }
+
+  updateScore(homeScore: number, awayScore: number) {
+    this.homeScore = homeScore;
+    this.awayScore = awayScore;
+  }
 }

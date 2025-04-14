@@ -62,4 +62,8 @@ export class LeagueService {
     this._league.playNextWeek();
   }
 
+  updateScore(week: number, homeTeamName: string, awayTeamName: string, newHomeScore: number, newAwayScore: number) {
+    this._league.updateScore(week, homeTeamName, awayTeamName, newHomeScore, newAwayScore);
+  }
+
 }

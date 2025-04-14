@@ -3,7 +3,7 @@ import { TeamModel } from './models/team';
 import { TeamScoreModel } from './models/team-score';
 import { MatchModel } from './models/match';
 import { FixtureService } from '../../shared/fixture.service';
-import { LeagueWinningChange, TeamScore } from '../../../models/abstract';
+import { LeagueWinningChange, Match, TeamScore } from '../../../models/abstract';
 
 export type NextWeekStartingType = 'playNextWeek';
 
@@ -66,6 +66,34 @@ export class LeagueManagement {
     return list;
   }
 
+  updateScore(week: number, homeTeamName: string, awayTeamName: string, newHomeScore: number, newAwayScore: number): void {
+
+    const weekMatches = this.fixtureService.getWeekMatches(week);
+    const match = weekMatches.find(x => x.homeTeamName === homeTeamName && x.awayTeamName === awayTeamName);
+
+    if (match == null)
+      throw new Error('match is empty!');
+
+    const board = this.getTeamScores();
+    const home = board.find(x => x.teamName === homeTeamName);
+    const away = board.find(x => x.teamName === awayTeamName);
+
+    if (home == null || away == null)
+      throw new Error('team not found!');
+
+    this.revokeScore(match, home, away);
+
+    match.result!.updateScore(newHomeScore, newAwayScore);
+
+    this.applyScore(match, home, away);
+
+    setTimeout(() => {
+      this.onWeekPlayed.next({
+        week, matches: weekMatches
+      });
+    }, 1000);
+  }
+
   playNextWeek(): void {
     if (this.weekPlaying) {
       console.error('The matches continue...');
@@ -107,33 +135,7 @@ export class LeagueManagement {
     home.matchCount += 1;
     away.matchCount += 1;
 
-    home.average += match.result.homeScore - match.result.awayScore;
-    away.average += match.result.awayScore - match.result.homeScore;
-
-    let winner: TeamScoreModel | undefined, loser: TeamScoreModel | undefined;
-
-    if (match.result!.homeScore > match.result!.awayScore) {
-      winner = home;
-      loser = away;
-    }
-    else if (match.result.homeScore < match.result.awayScore) { // deplasman takımı kazandıysa
-      winner = away;
-      loser = home;
-    }
-    else { // beraberlik
-      home.draws += 1;
-      home.point += 1;
-
-      away.draws += 1;
-      away.point += 1;
-    }
-
-    if (winner && loser) {
-      winner.wins += 1;
-      winner.point += 3;
-
-      loser.loses += 1;
-    }
+    this.applyScore(match, home, away);
   }
 
   private increaseToNextWeek() {
@@ -245,5 +247,45 @@ export class LeagueManagement {
     topAverageTeams.sort((a, b) => a.teamName.localeCompare(b.teamName));
 
     return topAverageTeams[0];
+  }
+
+
+  private revokeScore(match: Match, home: TeamScoreModel, away: TeamScoreModel) {
+    this.applyScore(match, home, away, true);
+  }
+
+  private applyScore(match: Match, home: TeamScoreModel, away: TeamScoreModel, revoke: boolean = false) {
+    if (match.result == null)
+      throw new Error('match result is empty!');
+
+    const factor: -1 | 1 = revoke ? -1 : 1;
+
+    home.average += (match.result.homeScore - match.result.awayScore) * factor;
+    away.average += (match.result.awayScore - match.result.homeScore) * factor;
+
+    let winner: TeamScoreModel | undefined, loser: TeamScoreModel | undefined;
+
+    if (match.result!.homeScore > match.result!.awayScore) {
+      winner = home;
+      loser = away;
+    }
+    else if (match.result.homeScore < match.result.awayScore) { // deplasman takımı kazandıysa
+      winner = away;
+      loser = home;
+    }
+    else { // beraberlik
+      home.draws += 1 * factor;
+      home.point += 1 * factor;
+
+      away.draws += 1 * factor;
+      away.point += 1 * factor;
+    }
+
+    if (winner && loser) {
+      winner.wins += 1 * factor;
+      winner.point += 3 * factor;
+
+      loser.loses += 1 * factor;
+    }
   }
 }

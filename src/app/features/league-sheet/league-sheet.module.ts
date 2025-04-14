@@ -7,6 +7,8 @@ import { PiTableOptionsDirective } from '../../utils/primeng/pi-table-options.di
 import { ButtonModule } from 'primeng/button';
 import { LeagueWinningChancesComponent } from './league-winning-chances/league-winning-chances.component';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { SkeletonModule } from 'primeng/skeleton';
         PiTableOptionsDirective,
         ButtonModule,
         SkeletonModule,
+        DialogModule,
+        FormsModule,
     ],
     providers: [
         // { provide: LeagueSheetService, useClass: LeagueSheetMockService } // TODO: hatırlatıcı, tamamen mock ihtiyacı kalmadığında sil

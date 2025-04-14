@@ -1,0 +1,74 @@
+<p-table piTableOptions dataKey="homeTeamName" [value]="weekResultsArr()">
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      @if (canEdit) {
+      <col style="width: 35%;">
+      <col style="width: 20%;">
+      <col style="width: 35%;">
+      <col style="width: 10%;">
+      }
+      @else {
+      <col style="width: 40%;">
+      <col style="width: 20%;">
+      <col style="width: 40%;">
+      }
+    </colgroup>
+  </ng-template>
+  <ng-template #header>
+    <tr>
+      <th colspan="3" class="text-center">STS {{ week }}. Hafta Maç Sonuçları</th>
+      @if(canEdit){
+      <th></th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template #body let-item>
+    <tr>
+      @if(loading()) {
+      <td><p-skeleton></p-skeleton></td>
+      <td><p-skeleton></p-skeleton></td>
+      <td><p-skeleton></p-skeleton></td>
+      @if(canEdit){
+      <td><p-skeleton></p-skeleton></td>
+      }
+      }
+      @else {
+      <td>{{ item.homeTeamName }}</td>
+      <td class="text-center">{{ item.result?.homeScore }} - {{ item.result?.awayScore }}</td>
+      <td>{{ item.awayTeamName }}</td>
+      @if(canEdit) {
+      <td>
+        <p-button variant="text" severity="warn" [raised]="true" (onClick)="openDialog(item)">
+          <ng-template #icon>
+            <span class="material-symbols-outlined">
+              edit
+            </span>
+          </ng-template>
+        </p-button>
+      </td>
+      }
+      }
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog header="Maç Skorunu Güncelle" [modal]="true" [(visible)]="dialogVisible" [style]="{ 'width': '25rem'}"
+  (onHide)="dialogHide()">
+  <span class="d-block mb-4">
+    {{ updatingMatch?.homeTeamName }} - {{ updatingMatch?.awayTeamName }} skorunu güncelle
+  </span>
+
+  <div class="d-flex justify-content-center mb-4" [style]="{'gap': '1rem'}">
+    <label for="dialog_homeScore" class="fw-bold">{{ updatingMatch?.homeTeamName }} Yeni Skoru:</label>
+    <input id="dialog_homeScore" class="p-1" autocomplete="off" [(ngModel)]="newHomeScore" />
+  </div>
+  <div class="d-flex justify-content-center mb-5" [style]="{'gap': '1rem'}">
+    <label for="dialog_awayScore" class="fw-bold">{{ updatingMatch?.awayTeamName }} Yeni Skoru:</label>
+    <input id="dialog_awayScore" class="p-1" autocomplete="off" [(ngModel)]="newAwayScore" />
+  </div>
+  <div class="d-flex justify-content-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="dialogVisible = false" [disabled]="disableBtn" />
+    <p-button label="Save" (click)="updateScore()" [disabled]="disableBtn" />
+  </div>
+
+</p-dialog>

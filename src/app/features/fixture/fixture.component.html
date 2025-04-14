@@ -2,7 +2,7 @@
   <div class="col-sm-12 col-md-12 col-lg-6">
 
     @for (item of fixture; track item.week) {
-    <weekly-match-results [week]="item.week"></weekly-match-results>
+    <weekly-match-results [week]="item.week" [editable]="true"></weekly-match-results>
     }
 
   </div>
