@@ -26,7 +26,8 @@ import { SkeletonModule } from 'primeng/skeleton';
         // { provide: LeagueSheetService, useClass: LeagueSheetMockService } // TODO: hatırlatıcı, tamamen mock ihtiyacı kalmadığında sil
     ],
     exports: [
-        LeagueSheetComponent
+        LeagueSheetComponent,
+        WeeklyMatchResultsComponent,
     ],
 })
 export class LeagueSheetModule {

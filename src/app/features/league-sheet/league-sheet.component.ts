@@ -15,6 +15,10 @@ export class LeagueSheetComponent implements OnInit {
   private readonly takeUntilDestroyed = getTakeUntilDestroyed();
 
   ngOnInit(): void {
+    const week = this.leagueService.getCurrentWeekNumber();
+    if (week > 0)
+      this.week.set(week);
+
     this.leagueService.onWeekPlayed()
       .pipe(this.takeUntilDestroyed())
       .subscribe((val) => {

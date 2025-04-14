@@ -24,10 +24,10 @@ export class LeagueManagement {
   weekPlaying = false;
 
   onWeekPlaying = {
-    _observer: new Subject<void>(),
-    next: () => {
+    _observer: new Subject<number>(),
+    next: (week: number) => {
       this.weekPlaying = true;
-      this.onWeekPlaying._observer.next();
+      this.onWeekPlaying._observer.next(week);
     }
   };
 
@@ -77,7 +77,7 @@ export class LeagueManagement {
       return;
     }
 
-    this.onWeekPlaying.next();
+    this.onWeekPlaying.next(this.currentWeek + 1);
 
     const week = this.increaseToNextWeek();
     const matches = this.fixtureService.getWeekMatches(week);

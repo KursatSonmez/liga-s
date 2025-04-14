@@ -18,6 +18,10 @@ export const FEATURE_ROUTES: Routes = [
         path: 'homepage',
         loadComponent: () => import('./homepage/homepage.component').then(x => x.HomepageComponent),
       },
+      {
+        path: 'fixture',
+        loadComponent: () => import('./fixture/fixture.component').then(x => x.FixtureComponent),
+      }
     ],
   }
 ];

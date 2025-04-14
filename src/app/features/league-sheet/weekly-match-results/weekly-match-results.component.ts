@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, input, numberAttribute, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { booleanAttribute, Component, effect, inject, Input, input, numberAttribute, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { LeagueService } from '../../shared/league.service';
 import { Match } from '../../../models/abstract';
 import { getTakeUntilDestroyed } from '../../../utils/destroy';
@@ -7,6 +7,13 @@ import { getTakeUntilDestroyed } from '../../../utils/destroy';
   selector: 'weekly-match-results',
   template: `
   <p-table piTableOptions dataKey="homeTeamName" [value]="weekResultsArr()">
+  <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+          <col style="width: 40%;">
+          <col style="width: 20%;">
+          <col style="width: 40%;">
+      </colgroup>
+  </ng-template>
     <ng-template #header>
         <tr>
             <th colspan="3" class="text-center">STS {{ week }}. Hafta Maç Sonuçları</th>
@@ -21,7 +28,7 @@ import { getTakeUntilDestroyed } from '../../../utils/destroy';
           }
           @else {
             <td>{{ item.homeTeamName }}</td>
-            <td>{{ item.result?.homeScore }} - {{ item.result?.awayScore }}</td>
+            <td class="text-center">{{ item.result?.homeScore }} - {{ item.result?.awayScore }}</td>
             <td>{{ item.awayTeamName }}</td>
           }
         </tr>
@@ -36,6 +43,9 @@ export class WeeklyMatchResultsComponent implements OnInit, OnChanges {
   @Input({ transform: numberAttribute })
   week: number | null = null;
 
+  @Input({ transform: booleanAttribute })
+  forceLoading?: boolean;
+
   private readonly leagueService = inject(LeagueService);
   private readonly takeUntilDestroyed = getTakeUntilDestroyed();
 
@@ -47,8 +57,9 @@ export class WeeklyMatchResultsComponent implements OnInit, OnChanges {
     this.leagueService
       .onWeekPlaying()
       .pipe(this.takeUntilDestroyed())
-      .subscribe(() => {
-        this.loading.set(true);
+      .subscribe(val => {
+        if (val === this.week || (this.forceLoading))
+          this.loading.set(true);
       });
   }
 
@@ -58,7 +69,7 @@ export class WeeklyMatchResultsComponent implements OnInit, OnChanges {
     }
   }
 
-  private refresh() {
+  refresh() {
     if (!this.week)
       return;
 

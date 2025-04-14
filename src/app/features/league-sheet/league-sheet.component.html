@@ -10,7 +10,7 @@
         </div>
         @if(week() > 0) {
         <div class="col-sm-12 col-md-5 col-lg-5 col-xl-3">
-          <weekly-match-results [week]="week()"></weekly-match-results>
+          <weekly-match-results [week]="week()" [forceLoading]="true"></weekly-match-results>
         </div>
         }
       </div>
